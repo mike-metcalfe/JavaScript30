@@ -58,7 +58,16 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
-
+//e is just an object full of data describing what happened
+//[] attribute selector (Wes uses instead of classes)
+window.addEventListener('keydown', function(e) {
+  const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+  const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
+  if(!audio) return; //stop the function from running when there is no corr. data key
+  audio.currentTime = 0; //rewind to start ot avoid  lag
+  audio.play();
+  key.classList.add('playing');
+});
 </script>
 
 
