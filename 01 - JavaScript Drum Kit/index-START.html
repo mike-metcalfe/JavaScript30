@@ -60,14 +60,45 @@
 <script>
 //e is just an object full of data describing what happened
 //[] attribute selector (Wes uses instead of classes)
-window.addEventListener('keydown', function(e) {
+
+/*
+ window.addEventListener('keydown', function(e) {
   const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
   const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
-  if(!audio) return; //stop the function from running when there is no corr. data key
+  if(!audio) return; //stops the function from running when there is no corr. data key
   audio.currentTime = 0; //rewind to start ot avoid  lag
   audio.play();
   key.classList.add('playing');
 });
+Wes doesn't like to attach functions to the keydown listener so we make seperate functions
+*/
+
+function playSound(e) {
+  const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+  const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
+
+  if(!audio) return; //stops the function from running when there is no corr. data key
+
+  audio.currentTime = 0; //rewind to start ot avoid  lag
+  audio.play();
+  key.classList.add('playing');
+}
+
+
+
+function removeTransition(e) {
+  if (e.propertyName !== 'transform') return; //skips if not a transform
+  this.classList.remove('playing'); //removes the class of playing
+};
+
+const keys = document.querySelectorAll('.key');
+//We want to listen on each to see when the transition ends (when the key tap animation ends)
+//JQ event listeners are not helpful - you have to use an event listener for each "node list"
+//Basically this just means that each key gets an event listener - when the transition ends we will run the call back function
+keys.forEach(key => key.addEventListener('transitionend', removeTransition));//get each key - each key gets an event listener added to it - when the transitionends we run the function at the end
+
+window.addEventListener('keydown', playSound);
+
 </script>
 
 
